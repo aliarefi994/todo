@@ -1,4 +1,7 @@
 <script setup>
+import { useTodoStore } from '@/stores/todo'
+
+const todoStore = useTodoStore()
 defineProps({
   todo: {
     type: Object,
@@ -11,10 +14,10 @@ defineProps({
     <div class="header">
       <span> date : {{ todo.createdAt }} </span>
       <div class="action">
-        <button class="material-icons del" @click="deleteTodo(todo.id)">delete</button>
+        <button class="material-icons del" @click="todoStore.deleteTodo(todo.id)">delete</button>
         <label class="container">
-          done/pending
-          <input type="checkbox" :checked="todo.done" />
+          {{ todo.done ? 'done' : 'pending' }}
+          <input type="checkbox" :checked="todo.done" @input="todoStore.updateTodo(todo.id)" />
           <span class="checkmark"></span>
         </label>
       </div>

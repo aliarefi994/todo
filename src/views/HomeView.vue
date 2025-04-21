@@ -1,23 +1,38 @@
 <script setup>
+import { ref, computed } from 'vue'
 import TodoItem from '@/components/TodoItem.vue'
 import Wrapper from '@/components/Wrapper.vue'
 import { useTodoStore } from '@/stores/todo'
 
 const todoStore = useTodoStore()
-const todos = todoStore.done
+const todoFilter = ref('all')
+const setTodoFilter = () => {
+  todoFilter.value = todoFilter.value === 'all' ? 'done' : 'all'
+}
+const todos = computed(() =>
+  todoFilter.value === 'all' ? todoStore.sorted : todoStore.done
+)
+
 </script>
 
 <template>
   <div class="header">
-    <h3>todo</h3>
-    <button>show todo</button>
+    <h1>{{ todoStore.todoCount }} ToDo</h1>
+    <h3>{{ todoFilter === 'all' ? 'All ToDo' : 'Done' }}</h3>
+    <button @click="setTodoFilter">
+      {{ todoFilter === 'all' ? 'show done ToDo' : 'show all ToDo' }}
+    </button>
   </div>
 
-  <div v-for="todo in todos" :key="todo.id">
-    <Wrapper>
-      <TodoItem :todo="todo" />
-    </Wrapper>
+  <div >
+    <div v-for="todo in todos" :key="todo.id">
+      <Wrapper>
+        <TodoItem :todo="todo" />
+      </Wrapper>
+    </div>
   </div>
+
+
 </template>
 
 <style lang="scss" scoped>
